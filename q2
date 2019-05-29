@@ -1,0 +1,202 @@
+#include <iostream>
+#include <conio.h>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+int main()
+{
+	double sideA = 0.0, sideB = 0.0, sideC = 0.0;
+	double perimeter = 0.0, area = 0.0, apothem=0.0, circumradius =0.0;
+	double w=0.0; //semiperimeter
+	double a,b,c; //angle in radians
+	double degz=0.0, degy=0.0, degx=0.0; //angle in degrees
+	double Ax, Ay, Bx, By, Cx, Cy, midABx, midABy, midACx, midACy, bisectorAB, bisectorAC, centerY, centerX;
+	int choice, i; //for looping only
+	bool abort; //to stop or continue the loop
+	
+	cout << "THIS PROGRAM COMPUTES SOME ELEMENTS OF A TRIANGLE";
+
+	i=0;
+	do{
+		cout << "\n\nEnter value for side A. " << endl; //prompts the user to input value for side A
+		cin >> sideA;
+		cout << "Enter value for side B. " << endl; //prompts the user to input value for side B
+		cin >> sideB;
+		cout << "Enter value for side C. " << endl; //prompts the user to input value for side C
+		cin >> sideC;
+	
+		perimeter = sideA + sideB + sideC; //perimeter formula
+		w = perimeter/2.00; // semiperimeter
+		area = sqrt(w*(w-sideA)*(w-sideB)*(w-sideC)); // computation of are using Heron's formula
+		c = (pow(sideA, 2) + pow(sideB, 2) - pow(sideC, 2))/ (2*sideA*sideB); //angle of Side C in radians
+		degz = acos(c)*(180/3.141592654); //angle of Side C in degrees
+		b = (pow(sideC, 2) + pow(sideA, 2) - pow(sideB, 2))/ (2*sideC*sideA); //angle of Side B in radians
+		degy = acos(b)*(180/3.141592654); //angle of Side B in degrees
+		a = (pow(sideB, 2) + pow(sideC, 2) - pow(sideA, 2))/ (2*sideB*sideC); //angle of Side A in radians
+		degx = acos(a)*(180/3.141592654); //angle of Side A in degrees
+		apothem = (2*area)/perimeter; //formula for apothem
+		circumradius = sideA/(2*sin(acos(a))); //formula for circumradius
+
+	if ((sideA+sideB)>sideC && (sideA+sideC)>sideB &&(sideB+sideC)>sideA){ //general condition for triangle inequality theorem
+
+		cout << "\n\nValue of Angle A facing side A is: " << setprecision(2) << fixed<< acos(a)<< " radians or " << degx << " degrees." << endl; // outputs the angle of side A
+		cout << "Value of Angle B facing side B is: "  << setprecision(2) << fixed<< acos(b)<< " radians or " << degy << " degrees." << endl; // outputs the angle of side B
+		cout << "Value of Angle C facing side C is: "  << setprecision(2) << fixed<< acos(c)<< " radians or " << degz << " degrees." << endl; // outputs the angle of side C
+
+		if(sideA == sideB && sideB == sideC && sideA == sideC){ //Condition for Equilateral 
+			cout << endl << "Classification: Equilateral Triangle"<<endl;
+		}else if(sideA == sideB || sideB == sideC || sideA == sideC){ //Condition for Isosceles
+			cout << endl << "Classification: Isosceles Triangle"<<endl;
+		}else{ //Condition for Scalene
+		cout << endl<< "Classification: Scalene Triangle"<<endl;}
+
+		cout << endl<< "The Area of the triangle is: " << setprecision(2) << fixed<< area<< endl; //outputs the value of area
+		cout << "The Perimeter of the triangle is: " << setprecision(2) << fixed<< perimeter<< endl; // outputs the value of perimeter
+
+		if(degx > 90 && degy < 90 && degz < 90 || degx < 90 && degy > 90 && degz < 90 ||degx < 90 && degy < 90 && degz > 90 ){//Condition for Obtuse
+			cout << endl<< "Classification : Obtuse triangle" <<endl;}
+		else if(pow(sideA,2) + pow(sideB,2) == pow(sideC,2) || pow(sideC,2) + pow(sideB,2) == pow(sideA,2) || pow(sideC,2) + pow(sideA,2) == pow(sideB,2)){ //Condition for Right
+			cout << endl<< "Classification: Right Triangle" <<endl;}
+		else{ //Condition for Acute
+			cout << endl<<"Classification: Acute Triangle" << endl;}
+
+
+		if (sideA == sideB && sideB == sideC && sideA == sideC){//Condition if there will be an output for apothem and circumcenter
+			cout << endl << "The apothem of the triangle is: " <<setprecision(2) << fixed<< apothem << endl; //There will be a value of apothem because it is equilateral
+			cout << "The circumradius of the triangle is: " <<setprecision(2) << fixed<< circumradius << endl; //output for circumradius
+			cout << endl << "Note: Only the circumradius was computed because in order to compute the circumcenter, you need to enter its x and y coordinates."<< endl;
+			cout << "Do you want to enter the coordinates and solve for the circumcenter? Press 1 to continue, press 2 to exit" <<endl; cin>> choice; //prompts the user to make a choice to continue or not
+				switch(choice){
+					case 1:
+					cout << "Enter x and y coordinates of point A respectively: " <<endl; //x and y coordinates of point A
+					cin >> Ax >> Ay;
+					cout << "Enter x and y coordinates of point B respectively: " <<endl; //x and y coordinates of point B
+					cin >> Bx >> By;
+					cout << "Enter x and y coordinates of point C respectively: " <<endl; //x and y coordinates of point B
+					cin >> Cx >> Cy;
+
+					if (Ax == Bx && Ay == By || Ax == Cx && Ay == Cy || Bx == Cx && By == Cy) {//Check if the points overlap
+						cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else if (Ax == Bx && Ax == Cx || Ay == By && Ay == Cy) {// Check if all points are on the same horizontal or vertical line
+						 cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else{
+					midABx = (Ax+Bx)/2; //midpoint formula for x coordinate of line AB
+					midABy = (Ay+By)/2; //midpoint formula for y coordinate of line AB
+					midACx = (Ax+Cx)/2; //midpoint formula for x coordinate of line AC
+					midACy = (Ay+Cy)/2; //midpoint formula for y coordinate of line AC
+
+					bisectorAB = ((Bx-Ax)/(By-Ay))*(-1); //perpendicular bisector formula for line AB
+					bisectorAC = ((Cx-Ax)/(Cy-Ay))*(-1); //perpendicular bisector formula for line AB
+
+					centerY = ((((bisectorAB*bisectorAC*midACx)-(bisectorAB*midACy))/bisectorAC) - (bisectorAB*midABx)+midABy) / (1-(bisectorAB/bisectorAC)); //solve for y coordinate of circumcenter
+					centerX = (centerY - midACy +(bisectorAC*midACx))/bisectorAC; //solve for x coordinate of circumcenter
+
+					cout << "The circumcenter is at points: (" <<setprecision(2) << fixed<< centerX << ", " <<setprecision(2) << fixed<< centerY << ")." << endl; //outputs the circumcenter
+					abort = true;} //continues the program
+					break;
+
+					case 2:
+						abort = true;
+						break;}
+				}
+		else if (sideA == sideB || sideB == sideC || sideA == sideC){ //Condition if there will be an output for apothem and circumcenter
+			cout << endl << "The apothem of the triangle is: None" << endl; //there will be no value for apothem because this is not an equilateral
+			cout << "The circumradius of the triangle is: " <<setprecision(2) << fixed<< circumradius << endl; //output for circumradius
+			cout << endl << "Notes: \nA) There is no apothem for Isosceles triangles. \nB) Only the circumradius was computed because in order to compute the circumcenter, you need to enter the x and y coordinates."<< endl;
+			cout << endl <<  "1) Do you want to enter the coordinates and solve for the circumcenter? \n2) or Enter equal sides to solve for apothem? \n\nPress 1 to enter the x and y coordinates, press 2 to enter an equilateral triangle, press 3 to exit"<<endl; cin>> choice; //prompts user to make a choice
+				switch(choice){
+					case 1:
+					cout << "Enter x and y coordinates of point A respectively: " <<endl; //x and y coordinates of point A
+					cin >> Ax >> Ay;
+					cout << "Enter x and y coordinates of point B respectively: " <<endl; //x and y coordinates of point B
+					cin >> Bx >> By;
+					cout << "Enter x and y coordinates of point C respectively: " <<endl; //x and y coordinates of point B
+					cin >> Cx >> Cy;
+
+					if (Ax == Bx && Ay == By || Ax == Cx && Ay == Cy || Bx == Cx && By == Cy) {//Check if the points overlap
+						cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else if (Ax == Bx && Ax == Cx || Ay == By && Ay == Cy) {// Check if all points are on the same horizontal or vertical line
+						 cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else{
+					midABx = (Ax+Bx)/2; //midpoint formula for x coordinate of line AB
+					midABy = (Ay+By)/2; //midpoint formula for y coordinate of line AB
+					midACx = (Ax+Cx)/2; //midpoint formula for x coordinate of line AC
+					midACy = (Ay+Cy)/2; //midpoint formula for y coordinate of line AC
+
+					bisectorAB = ((Bx-Ax)/(By-Ay))*(-1); //perpendicular bisector formula for line AB
+					bisectorAC = ((Cx-Ax)/(Cy-Ay))*(-1); //perpendicular bisector formula for line AB
+
+					centerY = ((((bisectorAB*bisectorAC*midACx)-(bisectorAB*midACy))/bisectorAC) - (bisectorAB*midABx)+midABy) / (1-(bisectorAB/bisectorAC)); //solve for y coordinate of circumcenter
+					centerX = (centerY - midACy +(bisectorAC*midACx))/bisectorAC; //solve for x coordinate of circumcenter
+
+					cout << "The circumcenter is at points: (" <<setprecision(2) << fixed<< centerX << ", " <<setprecision(2) << fixed<< centerY << ")." << endl; //outputs the circumcenter
+					abort = true;} //continues the program
+					break;
+
+					case 2:
+						abort = false; //continues the program
+						break;
+
+					case 3:
+						abort = true; //stops the program
+						break;}
+				}
+		else if (sideA != sideB && sideB != sideC && sideA != sideC){ //Condition if there will be an output for apothem and circumcenter
+			cout << endl << "The apothem of the triangle is: None" << endl; //there will be no value for apothem because this is not an equilateral
+			cout << "The circumradius of the triangle is: " <<setprecision(2) << fixed<< circumradius << endl; //output for circumradius
+			cout << endl << "Notes: \nA) There is no apothem for Isosceles triangles. \nB) Only the circumradius was computed because in order to compute the circumcenter, you need to enter the x and y coordinates."<< endl;
+			cout << endl <<  "1) Do you want to enter the coordinates and solve for the circumcenter? \n2) or Enter equal sides to solve for apothem? \n\nPress 1 to enter the x and y coordinates, press 2 to enter an equilateral triangle, press 3 to exit"<<endl; cin>> choice; //prompts user to make a choice
+				switch(choice){
+					case 1:
+					cout << "Enter x and y coordinates of point A respectively: " <<endl; //x and y coordinates of point A
+					cin >> Ax >> Ay;
+					cout << "Enter x and y coordinates of point B respectively: " <<endl; //x and y coordinates of point B
+					cin >> Bx >> By;
+					cout << "Enter x and y coordinates of point C respectively: " <<endl; //x and y coordinates of point B
+					cin >> Cx >> Cy;
+
+					if (Ax == Bx && Ay == By || Ax == Cx && Ay == Cy || Bx == Cx && By == Cy) {//Check if the points overlap
+						cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else if (Ax == Bx && Ax == Cx || Ay == By && Ay == Cy) {// Check if all points are on the same horizontal or vertical line
+						 cout << "Invalid Input. The coordinates you entered will not form a triangle";
+						abort = true;}
+					else{
+					midABx = (Ax+Bx)/2; //midpoint formula for x coordinate of line AB
+					midABy = (Ay+By)/2; //midpoint formula for y coordinate of line AB
+					midACx = (Ax+Cx)/2; //midpoint formula for x coordinate of line AC
+					midACy = (Ay+Cy)/2; //midpoint formula for y coordinate of line AC
+
+					bisectorAB = ((Bx-Ax)/(By-Ay))*(-1); //perpendicular bisector formula for line AB
+					bisectorAC = ((Cx-Ax)/(Cy-Ay))*(-1); //perpendicular bisector formula for line AB
+
+					centerY = ((((bisectorAB*bisectorAC*midACx)-(bisectorAB*midACy))/bisectorAC) - (bisectorAB*midABx)+midABy) / (1-(bisectorAB/bisectorAC)); //solve for y coordinate of circumcenter
+					centerX = (centerY - midACy +(bisectorAC*midACx))/bisectorAC; //solve for x coordinate of circumcenter
+
+					cout << "The circumcenter is at points: (" <<setprecision(2) << fixed<< centerX << ", " <<setprecision(2) << fixed<< centerY << ")." << endl; //outputs the circumcenter
+					abort = true;} //continues the program
+					break;
+
+					case 2:
+					abort = false; //continues the program
+					break;
+
+					case 3:
+					abort = true; //stops the loop
+					break;}
+				}
+	}else{//condition for triangle inequality
+		cout << "Invalid input based on Triangle Inequality Theorem.";
+		abort = true;}
+
+	}while(!abort); //loop will continue as long as abort is false
+
+	_getch();
+	return 0;
+}
